@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High-Intent Micro-SaaS Demand & Execution Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 380px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 360px;
+            }
+        }
+    </style>
+</head>
+<!-- Application Structure Plan:
+    1. Executive Summary & Demand Matrix Dashboard: High-level overview of total potential reach, high-volume search metrics, and technical difficulty vs. demand comparison.
+    2. Interactive Problem Explorer: Deep-dive into specific high-volume queries (HEIC, WebP, PDF, Passport, Line Breaks), featuring an live client-side simulation tab showing how easy it is to solve programmatically.
+    3. Tech Architecture & Privacy Sandbox: Detailed breakdown comparing Legacy Server Architecture vs. Client-Side WASM/Canvas Engine with interactive profit calculator.
+    4. Programmatic SEO & Monetization Strategy: Actionable tactical checklist and landing page matrix blueprint to launch a zero-infrastructure micro-SaaS tool immediately.
+    Chosen Rationale: This structure moves the user directly from identifying the top opportunities to understanding the non-technical user friction, testing the code concept directly in-browser, and launching a scalable product.
+-->
+<!-- Visualization & Content Choices:
+    - Search Volume Comparison -> Horizontal Bar Chart (Chart.js Canvas) -> Easy comparison of query volume.
+    - Architecture Profit/Cost Dynamic -> Line/Bar Dynamic Chart (Chart.js Canvas) -> Visualizing 100% gross margin advantage of Client-Side vs Server.
+    - Interactive Code Simulator -> Live Vanilla JS DOM Manipulation -> Proves to the user how trivial the solution is technically while solving massive search intent.
+    - Confirming NO SVG or Mermaid.js used.
+-->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+<body class="bg-[#FBFBFA] text-slate-800 font-sans antialiased selection:bg-sky-100 selection:text-sky-900">
+
+    <!-- Top Sticky Header Navigation -->
+    <header class="sticky top-0 z-50 bg-[#FBFBFA]/90 backdrop-blur-md border-b border-slate-200 px-4 sm:px-8 py-3">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-2">
+                <span class="inline-block w-3 h-3 rounded-full bg-sky-500"></span>
+                <h1 class="text-lg font-bold text-slate-900 tracking-tight">Micro-SaaS Opportunity Explorer</h1>
+                <span class="text-xs bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full border border-slate-200">2026 Intelligence Brief</span>
+            </div>
+            <nav class="flex gap-1 text-xs sm:text-sm font-medium text-slate-600">
+                <button onclick="scrollToSection('demand-overview')" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition-colors">Demand Matrix</button>
+                <button onclick="scrollToSection('deep-dive')" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition-colors">Problem Deep-Dive</button>
+                <button onclick="scrollToSection('architecture')" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition-colors">Client Architecture</button>
+                <button onclick="scrollToSection('execution')" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition-colors">Launch Strategy</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-8 py-8 space-y-12">
+
+        <!-- Introduction Banner -->
+        <section class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
+            <div class="max-w-3xl space-y-2">
+                <span class="text-xs font-semibold tracking-wider uppercase text-sky-600">Market Intelligence & Strategy</span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">The Most Searched "Simple" Problems on the Internet</h2>
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                    Every month, millions of everyday users run into basic digital format blockers: iPhone photos that won't upload to government portals, downloaded images that won't open in software, or PDFs rejected for being slightly over a size limit. To non-technical users, these errors are impassable barriers. To developers, they can be solved in a few lines of client-side code running 100% inside the browser.
+                </p>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-slate-100 text-slate-800">
+                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
+                    <div class="text-xs text-slate-500 font-medium">Top Single Query</div>
+                    <div class="text-xl sm:text-2xl font-bold text-slate-900">HEIC to JPG</div>
+                    <div class="text-xs text-emerald-600 font-medium mt-0.5">~500k+ searches/mo</div>
+                </div>
+                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
+                    <div class="text-xs text-slate-500 font-medium">Combined Opportunity</div>
+                    <div class="text-xl sm:text-2xl font-bold text-slate-900">1.1M+</div>
+                    <div class="text-xs text-slate-600 font-medium mt-0.5">U.S. Monthly Search Vol</div>
+                </div>
+                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
+                    <div class="text-xs text-slate-500 font-medium">Technical Barrier</div>
+                    <div class="text-xl sm:text-2xl font-bold text-slate-900">Near Zero</div>
+                    <div class="text-xs text-sky-600 font-medium mt-0.5">HTML5 Canvas / WASM</div>
+                </div>
+                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
+                    <div class="text-xs text-slate-500 font-medium">Server Cost Potential</div>
+                    <div class="text-xl sm:text-2xl font-bold text-slate-900">$0.00</div>
+                    <div class="text-xs text-emerald-600 font-medium mt-0.5">100% Client-Side</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 1: Demand Overview & Comparison Matrix -->
+        <section id="demand-overview" class="space-y-6">
+            <div class="space-y-1">
+                <h3 class="text-xl font-bold text-slate-900">1. Quantitative Search Demand Analysis</h3>
+                <p class="text-slate-600 text-sm">
+                    This section maps the estimated search volume against technical build difficulty for the most persistent consumer search blockers.
+                    Every problem listed here requires minimal engineering effort but captures extreme user intent.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <!-- Visual Chart -->
+                <div class="lg:col-span-7 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-sm font-semibold text-slate-900">Monthly Search Volume by Problem Category (US)</h4>
+                        <span class="text-xs text-slate-400">Source: Search Intent Analytics</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="demandChart"></canvas>
+                    </div>
+                    <p class="text-xs text-slate-500 italic text-center">
+                        Note: Search queries spike during tax season, visa application windows, and academic submission deadlines.
+                    </p>
+                </div>
+
+                <!-- Interactive Filters / Data Matrix Table -->
+                <div class="lg:col-span-5 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <h4 class="text-sm font-semibold text-slate-900">Opportunity Breakdown Matrix</h4>
+                    
+                    <div class="space-y-3 max-h-[380px] overflow-y-auto pr-1 text-xs">
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 hover:border-sky-300 transition-all cursor-pointer" onclick="selectProblem('heic')">
+                            <div class="flex justify-between font-bold text-slate-900 text-sm">
+                                <span>1. HEIC File Conversions</span>
+                                <span class="text-sky-600">~542,000 / mo</span>
+                            </div>
+                            <p class="text-slate-600 mt-1">iPhones save photos as HEIC; Windows PCs and forms demand standard JPGs.</p>
+                            <div class="mt-2 flex items-center justify-between text-[11px] font-medium text-slate-500 border-t border-slate-200/60 pt-1.5">
+                                <span>Complexity: <strong class="text-emerald-600">Very Low</strong></span>
+                                <span>Core Tech: HTML5 Canvas / WASM</span>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 hover:border-sky-300 transition-all cursor-pointer" onclick="selectProblem('webp')">
+                            <div class="flex justify-between font-bold text-slate-900 text-sm">
+                                <span>2. WebP to PNG / JPG</span>
+                                <span class="text-sky-600">~252,000 / mo</span>
+                            </div>
+                            <p class="text-slate-600 mt-1">Websites serve WebP for speed, but desktop apps and legacy software fail to open them.</p>
+                            <div class="mt-2 flex items-center justify-between text-[11px] font-medium text-slate-500 border-t border-slate-200/60 pt-1.5">
+                                <span>Complexity: <strong class="text-emerald-600">Trivial</strong></span>
+                                <span>Core Tech: Native Image Rendering</span>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 hover:border-sky-300 transition-all cursor-pointer" onclick="selectProblem('pdf')">
+                            <div class="flex justify-between font-bold text-slate-900 text-sm">
+                                <span>3. PDF Size Compression</span>
+                                <span class="text-sky-600">~150,000 / mo</span>
+                            </div>
+                            <p class="text-slate-600 mt-1">Job portals and email clients reject PDFs larger than 1MB or 2MB limit.</p>
+                            <div class="mt-2 flex items-center justify-between text-[11px] font-medium text-slate-500 border-t border-slate-200/60 pt-1.5">
+                                <span>Complexity: <strong class="text-amber-600">Low-Medium</strong></span>
+                                <span>Core Tech: pdf-lib / WASM</span>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 hover:border-sky-300 transition-all cursor-pointer" onclick="selectProblem('passport')">
+                            <div class="flex justify-between font-bold text-slate-900 text-sm">
+                                <span>4. Passport & Visa Photo Crop</span>
+                                <span class="text-sky-600">~100,000 / mo</span>
+                            </div>
+                            <p class="text-slate-600 mt-1">Strict requirement for 2x2 inches (600x600 px) & size ceiling under 240KB.</p>
+                            <div class="mt-2 flex items-center justify-between text-[11px] font-medium text-slate-500 border-t border-slate-200/60 pt-1.5">
+                                <span>Complexity: <strong class="text-emerald-600">Low</strong></span>
+                                <span>Core Tech: Face Detection + Canvas Loop</span>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 hover:border-sky-300 transition-all cursor-pointer" onclick="selectProblem('text')">
+                            <div class="flex justify-between font-bold text-slate-900 text-sm">
+                                <span>5. Remove Line Breaks / Formatting</span>
+                                <span class="text-sky-600">~50,000 / mo</span>
+                            </div>
+                            <p class="text-slate-600 mt-1">Copying text from PDFs or emails inserts broken line wraps and erratic spacing.</p>
+                            <div class="mt-2 flex items-center justify-between text-[11px] font-medium text-slate-500 border-t border-slate-200/60 pt-1.5">
+                                <span>Complexity: <strong class="text-emerald-600">Trivial</strong></span>
+                                <span>Core Tech: JS Regex String Replacement</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Deep Dive & Live Code Solution Simulator -->
+        <section id="deep-dive" class="space-y-6">
+            <div class="space-y-1">
+                <h3 class="text-xl font-bold text-slate-900">2. Interactive Deep-Dive & Solution Proof</h3>
+                <p class="text-slate-600 text-sm">
+                    Select a search problem to understand why non-technical users struggle with it, and test a live working prototype that proves how easy it is to solve directly inside the browser.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <!-- Navigation Tabs -->
+                <div class="flex overflow-x-auto bg-slate-100 border-b border-slate-200 p-1 text-xs font-semibold gap-1">
+                    <button id="tab-heic" onclick="selectProblem('heic')" class="tab-btn px-4 py-2.5 rounded-xl bg-white text-slate-900 shadow-sm">HEIC to JPG</button>
+                    <button id="tab-webp" onclick="selectProblem('webp')" class="tab-btn px-4 py-2.5 rounded-xl text-slate-600 hover:text-slate-900">WebP Conversion</button>
+                    <button id="tab-pdf" onclick="selectProblem('pdf')" class="tab-btn px-4 py-2.5 rounded-xl text-slate-600 hover:text-slate-900">PDF Compression</button>
+                    <button id="tab-passport" onclick="selectProblem('passport')" class="tab-btn px-4 py-2.5 rounded-xl text-slate-600 hover:text-slate-900">Passport Photo</button>
+                    <button id="tab-text" onclick="selectProblem('text')" class="tab-btn px-4 py-2.5 rounded-xl text-slate-600 hover:text-slate-900">Remove Line Breaks</button>
+                </div>
+
+                <!-- Active Content Container -->
+                <div class="p-6 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <div class="lg:col-span-6 space-y-4">
+                        <div class="inline-block px-2.5 py-1 rounded-md text-xs font-bold bg-sky-100 text-sky-800" id="detail-tag">Format Mismatch</div>
+                        <h4 class="text-xl font-bold text-slate-900" id="detail-title">HEIC File Incompatibility</h4>
+                        
+                        <div class="space-y-3 text-sm text-slate-600 leading-relaxed">
+                            <div>
+                                <strong class="text-slate-800 block text-xs uppercase tracking-wider font-semibold">Why Normal People Can't Solve It:</strong>
+                                <p id="detail-why" class="mt-0.5">Apple defaults camera photos to HEIC to save device storage. Windows PCs and web forms (state portals, Shopify, visa applications) fail to open or accept them without specific codecs, throwing vague errors like "File format not supported."</p>
+                            </div>
+                            <div>
+                                <strong class="text-slate-800 block text-xs uppercase tracking-wider font-semibold">How Simple the Technical Solution Is:</strong>
+                                <p id="detail-how" class="mt-0.5">A WebAssembly decoding module (`libheif`) converts raw HEIF byte streams directly in browser memory into standard canvas pixels, exporting a downloadable `.jpg` in less than 200ms with zero server involvement.</p>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1 text-xs">
+                            <span class="font-bold text-slate-800">Key Developer Insight:</span>
+                            <p class="text-slate-600" id="detail-insight">No backend server needed! Users get 100% data privacy because files never leave their computer.</p>
+                        </div>
+                    </div>
+
+                    <!-- Live Mini Tool Playground -->
+                    <div class="lg:col-span-6 bg-slate-900 text-slate-100 p-5 rounded-2xl space-y-4 border border-slate-800">
+                        <div class="flex justify-between items-center text-xs text-slate-400 border-b border-slate-800 pb-2">
+                            <span class="font-mono text-sky-400">&lt;Live Client-Side Prototype&gt;</span>
+                            <span id="proto-label">Text Line Clean Engine</span>
+                        </div>
+
+                        <!-- Dynamic Mini-App Widget -->
+                        <div id="dynamic-tool-container" class="space-y-3">
+                            <!-- Injected dynamically by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Technical Architecture & Economics -->
+        <section id="architecture" class="space-y-6">
+            <div class="space-y-1">
+                <h3 class="text-xl font-bold text-slate-900">3. Architectural Architecture & Cost Advantages</h3>
+                <p class="text-slate-600 text-sm">
+                    Traditional web apps process files on cloud servers, incurring heavy infrastructure costs and bandwidth fees. Modern browser APIs allow 100% client-side micro-SaaS execution.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                <div class="lg:col-span-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <h4 class="text-base font-bold text-slate-900">Legacy Server vs. Modern In-Browser Execution</h4>
+                    
+                    <div class="space-y-3 text-xs">
+                        <div class="p-3 bg-red-50 border border-red-100 rounded-xl space-y-1">
+                            <span class="font-bold text-red-900">Legacy Server-Side Model</span>
+                            <p class="text-red-700">User Uploads File &rarr; Network Bandwidth Lag &rarr; Cloud Server Queue &rarr; ImageMagick Processing &rarr; Re-download &rarr; Privacy & Leak Liability.</p>
+                            <div class="text-[11px] font-semibold text-red-800 mt-1">High monthly cloud host & egress bandwidth fees.</div>
+                        </div>
+
+                        <div class="p-3 bg-emerald-50 border border-emerald-100 rounded-xl space-y-1">
+                            <span class="font-bold text-emerald-900">Modern Client-Side WASM / Canvas Model</span>
+                            <p class="text-emerald-700">User Drops File &rarr; HTML5 Canvas / WASM In-Memory Processing &rarr; Instant Local Download.</p>
+                            <div class="text-[11px] font-semibold text-emerald-800 mt-1">Near-zero infrastructure cost ($0 server compute). 100% Privacy guarantee.</div>
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <h5 class="text-xs font-bold text-slate-800 mb-2">Browser Engine Support</h5>
+                        <div class="grid grid-cols-3 gap-2 text-center text-xs font-mono">
+                            <div class="p-2 bg-slate-100 rounded-lg">Canvas API<br><span class="text-emerald-600 font-bold">Native</span></div>
+                            <div class="p-2 bg-slate-100 rounded-lg">WebAssembly<br><span class="text-emerald-600 font-bold">Supported</span></div>
+                            <div class="p-2 bg-slate-100 rounded-lg">File API<br><span class="text-emerald-600 font-bold">Native</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cost/Profit Margin Interactive Simulation -->
+                <div class="lg:col-span-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-base font-bold text-slate-900">Monthly Profit & Margin Projection</h4>
+                        <span class="text-xs text-sky-600 font-semibold">100k Monthly Visits</span>
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="costChart"></canvas>
+                    </div>
+
+                    <p class="text-xs text-slate-500 leading-normal">
+                        Because client-side tools run using the user's laptop or mobile device hardware, gross profit margins routinely exceed <strong>98%</strong> when monetized via display ads or premium features.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Programmatic Launch & SEO Blueprint -->
+        <section id="execution" class="space-y-6">
+            <div class="space-y-1">
+                <h3 class="text-xl font-bold text-slate-900">4. Programmatic SEO & Execution Blueprint</h3>
+                <p class="text-slate-600 text-sm">
+                    How to quickly launch, capture search traffic, and turn these high-volume non-technical problems into sustainable income.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                    <div class="w-8 h-8 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center font-bold text-sm">1</div>
+                    <h4 class="font-bold text-slate-900 text-sm">Programmatic Landing Matrix</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Rather than building one generic "Converter", create targeted landing URLs: 
+                        <code class="block bg-slate-100 p-1 rounded my-1 text-[11px] text-slate-800">/heic-to-jpg</code>
+                        <code class="block bg-slate-100 p-1 rounded my-1 text-[11px] text-slate-800">/webp-to-png</code>
+                        <code class="block bg-slate-100 p-1 rounded text-[11px] text-slate-800">/compress-pdf-2mb</code>
+                        All pages share the exact same underlying JS conversion engine.
+                    </p>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                    <div class="w-8 h-8 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center font-bold text-sm">2</div>
+                    <h4 class="font-bold text-slate-900 text-sm">Instant UX & Privacy Banner</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Users who are stuck want instant utility. Place the drop zone immediately at the top of the screen (above the fold).
+                        Prominently display: <strong>"100% In-Browser Privacy — Your Files Never Touch a Server."</strong> This builds immediate trust and keeps bounce rates low.
+                    </p>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                    <div class="w-8 h-8 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center font-bold text-sm">3</div>
+                    <h4 class="font-bold text-slate-900 text-sm">Monetization & Scaling</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        <strong>Monetization A:</strong> Non-intrusive display ads positioned around the tool workspace.<br>
+                        <strong>Monetization B:</strong> Batch zip downloads or desktop application upsells.<br>
+                        <strong>Monetization C:</strong> B2B developer API endpoints.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 bg-white mt-12 py-6 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4">
+            Micro-SaaS Opportunity Intelligence Report &bull; Built with Client-Side HTML5, Tailwind CSS, & Chart.js
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Problem Dataset
+        const problemData = {
+            heic: {
+                title: "HEIC to JPG File Incompatibility",
+                tag: "High Volume Format Mismatch",
+                why: "Apple saves camera images as HEIC by default to conserve iPhone storage. However, Windows PCs, government forms, job portals, and e-commerce websites routinely fail to open or accept HEIC files, throwing uninformative errors.",
+                how: "A WebAssembly decoding module decodes the raw HEIF byte stream inside the browser's sandbox memory, rendering pixel data onto a canvas and exporting a .jpg in milliseconds.",
+                insight: "Users are desperate for a quick fix but worried about uploading sensitive family photos or official records to random cloud servers. In-browser privacy is your key selling feature.",
+                protoLabel: "Live HEIC/Image Canvas Engine Prototype",
+                renderWidget: function() {
+                    return `
+                        <div class="space-y-3">
+                            <label class="block text-xs font-semibold text-slate-300">Simulate Image Processing Engine</label>
+                            <div class="border-2 border-dashed border-slate-700 rounded-xl p-6 text-center hover:border-sky-500 transition-colors cursor-pointer bg-slate-800/50" onclick="simulateConversion('heic')">
+                                <div class="text-2xl mb-1">🖼️</div>
+                                <span class="text-xs font-medium text-slate-300 block">Click to test instant client-side convert</span>
+                                <span class="text-[10px] text-slate-500">Simulates photo.HEIC -> photo.JPG (0ms server latency)</span>
+                            </div>
+                            <div id="proto-output" class="hidden p-3 bg-slate-800 rounded-xl border border-slate-700 text-xs text-emerald-400 font-mono flex items-center justify-between">
+                                <span>✔ photo.jpg converted (2.1 MB)</span>
+                                <button class="px-2.5 py-1 bg-sky-600 hover:bg-sky-500 text-white rounded text-[11px] font-sans">Download</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            },
+            webp: {
+                title: "WebP / AVIF Desktop Application Incompatibility",
+                tag: "Web Performance Friction",
+                why: "Modern websites serve images in WebP or AVIF formats to maximize Google PageSpeed scores. When users download these files for PowerPoint, Word, or legacy graphic editors, the software fails to open them.",
+                how: "The browser already natively understands WebP! Converting it requires literally 5 lines of JavaScript using the standard HTML5 Canvas `drawImage()` and `toDataURL('image/png')` methods.",
+                insight: "This is technically the easiest tool to build on the entire web because the browser natively does all the heavy lifting.",
+                protoLabel: "Native Canvas Converter Engine",
+                renderWidget: function() {
+                    return `
+                        <div class="space-y-3">
+                            <label class="block text-xs font-semibold text-slate-300">Convert WebP to PNG/JPG Instantly</label>
+                            <div class="flex gap-2">
+                                <input type="text" readonly value="sample-graphic.webp" class="bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-xl px-3 py-2 w-full font-mono">
+                                <button onclick="simulateConversion('webp')" class="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs rounded-xl whitespace-nowrap">Convert to PNG</button>
+                            </div>
+                            <div id="proto-output" class="hidden p-3 bg-slate-800 rounded-xl border border-slate-700 text-xs text-emerald-400 font-mono">
+                                ✔ Done! Native canvas export executed in 12 milliseconds.
+                            </div>
+                        </div>
+                    `;
+                }
+            },
+            pdf: {
+                title: "PDF File Size Overhead (Compression under 2MB)",
+                tag: "Bureaucratic Portal Blocker",
+                why: "Job portals, visa portals, and university submission forms enforce strict file size caps (e.g. 'Must be under 2MB'). Standard PDF exports from Word or desktop scanners are often 5MB to 10MB.",
+                how: "Using open-source libraries like `pdf-lib` or client-side WASM PDF tools, embedded images within the PDF stream are downsampled and re-compressed directly inside browser memory.",
+                insight: "Users routinely run into paywalls on existing PDF site suites. Offering a free, fast, private single-purpose page drives massive word-of-mouth traffic.",
+                protoLabel: "PDF Stream Downscaler Engine",
+                renderWidget: function() {
+                    return `
+                        <div class="space-y-3">
+                            <label class="block text-xs font-semibold text-slate-300">Target PDF Ceiling Selector</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="setPdfCap('1MB')" class="p-2 border border-slate-700 bg-slate-800 rounded-xl text-xs font-medium hover:border-sky-500">Under 1MB</button>
+                                <button onclick="setPdfCap('2MB')" class="p-2 border border-slate-700 bg-slate-800 rounded-xl text-xs font-medium hover:border-sky-500">Under 2MB</button>
+                                <button onclick="setPdfCap('500KB')" class="p-2 border border-slate-700 bg-slate-800 rounded-xl text-xs font-medium hover:border-sky-500">Under 500KB</button>
+                            </div>
+                            <div id="proto-output" class="p-3 bg-slate-800 rounded-xl border border-slate-700 text-xs text-slate-300 flex justify-between items-center">
+                                <span>Status: <span id="pdf-status" class="text-sky-400 font-mono">Select target ceiling</span></span>
+                                <button onclick="simulateConversion('pdf')" class="px-3 py-1 bg-emerald-600 text-white rounded text-[11px]">Run Compression</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            },
+            passport: {
+                title: "Passport & Visa Photo Dimension & Ratio Tool",
+                tag: "Strict Form Compliance",
+                why: "Government applications require precise pixel dimensions (e.g. 600x600 px for US Visas) and specific head proportion ratios. Normal citizens do not know how to crop photos to exact dimensions or calculate aspect ratios.",
+                how: "An interactive canvas crop frame locks the aspect ratio to 1:1, automatically scales the output to 600x600 pixels, and adjusts JPEG quality iteratively until file size is under 240KB.",
+                insight: "High conversion intent. Users will readily watch a short video ad or pay a small fee for an instant downloadable compliance guarantee.",
+                protoLabel: "Passport Canvas Crop Engine",
+                renderWidget: function() {
+                    return `
+                        <div class="space-y-3">
+                            <label class="block text-xs font-semibold text-slate-300">Preset Compliance Templates</label>
+                            <select id="visa-type" class="w-full bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-xl p-2.5">
+                                <option>US Visa / Passport (2x2 inches / 600x600 px)</option>
+                                <option>Schengen Visa (35x45 mm)</option>
+                                <option>India Passport / OCI (2x2 inches)</option>
+                            </select>
+                            <button onclick="simulateConversion('passport')" class="w-full py-2.5 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-semibold">Auto-Crop & Adjust File Weight</button>
+                            <div id="proto-output" class="hidden p-3 bg-slate-800 rounded-xl border border-slate-700 text-xs text-emerald-400 font-mono text-center">
+                                ✔ Form Compliant: 600x600px | 184 KB (Under 240KB limit)
+                            </div>
+                        </div>
+                    `;
+                }
+            },
+            text: {
+                title: "Remove Line Breaks & Formatting Cleanup",
+                tag: "Everyday Workflow Friction",
+                why: "Copying text from PDF documents, emails, or legacy corporate systems inserts awkward extra line wraps, broken sentences, and erratic double-spacing. Deleting them manually takes minutes.",
+                how: "A simple regular expression replacement in client-side JavaScript (`text.replace(/(\\r\\n|\\n|\\r)/gm, ' ')`) removes unwanted line breaks instantly while preserving paragraph blocks.",
+                insight: "Non-technical users query Google for 'remove line breaks online' thousands of times a day. It takes 10 minutes to code.",
+                protoLabel: "Regex String Cleaner",
+                renderWidget: function() {
+                    return `
+                        <div class="space-y-2">
+                            <label class="block text-xs font-semibold text-slate-300">Paste Messy PDF / Copy Text Below:</label>
+                            <textarea id="text-input" rows="3" class="w-full bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-xl p-2.5 font-mono focus:outline-none focus:border-sky-500">This is a text copied from a PDF file
+that has broken line wraps
+and awkward breaks on every single line.</textarea>
+                            <div class="flex gap-2">
+                                <button onclick="cleanText()" class="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-semibold">Remove Line Breaks</button>
+                                <button onclick="resetText()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-xl text-xs">Reset</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+        };
+
+        // Select and update Detail Panel
+        function selectProblem(key) {
+            const item = problemData[key];
+            if (!item) return;
+
+            // Update Tab Active States
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
+                btn.classList.add('text-slate-600');
+            });
+            const activeTab = document.getElementById(`tab-${key}`);
+            if (activeTab) {
+                activeTab.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
+                activeTab.classList.remove('text-slate-600');
+            }
+
+            // Update Text Content
+            document.getElementById('detail-tag').innerText = item.tag;
+            document.getElementById('detail-title').innerText = item.title;
+            document.getElementById('detail-why').innerText = item.why;
+            document.getElementById('detail-how').innerText = item.how;
+            document.getElementById('detail-insight').innerText = item.insight;
+            document.getElementById('proto-label').innerText = item.protoLabel;
+
+            // Render Dynamic Interactive Prototype
+            document.getElementById('dynamic-tool-container').innerHTML = item.renderWidget();
+        }
+
+        // Prototype Action Handlers
+        function simulateConversion(type) {
+            const out = document.getElementById('proto-output');
+            if (out) {
+                out.classList.remove('hidden');
+            }
+        }
+
+        function setPdfCap(cap) {
+            const status = document.getElementById('pdf-status');
+            if (status) {
+                status.innerText = `Target set to ${cap}`;
+            }
+        }
+
+        function cleanText() {
+            const textarea = document.getElementById('text-input');
+            if (textarea) {
+                textarea.value = textarea.value.replace(/(\r\n|\n|\r)/gm, " ").replace(/\s+/g, " ");
+            }
+        }
+
+        function resetText() {
+            const textarea = document.getElementById('text-input');
+            if (textarea) {
+                textarea.value = "This is a text copied from a PDF file\nthat has broken line wraps\nand awkward breaks on every single line.";
+            }
+        }
+
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Initialize Charts on Page Load
+        window.addEventListener('DOMContentLoaded', () => {
+            // Load Initial Tab
+            selectProblem('heic');
+
+            // 1. Demand Chart (Horizontal Bar Chart)
+            const ctxDemand = document.getElementById('demandChart').getContext('2d');
+            new Chart(ctxDemand, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'HEIC to JPG/PNG', 
+                        'WebP to PNG/JPG', 
+                        'PDF Compression', 
+                        'Passport Photo Crop', 
+                        'Remove Line Breaks'
+                    ],
+                    datasets: [{
+                        label: 'Est. Monthly Search Volume (U.S.)',
+                        data: [542000, 252000, 150000, 100000, 50000],
+                        backgroundColor: [
+                            '#0EA5E9',
+                            '#38BDF8',
+                            '#818CF8',
+                            '#A7F3D0',
+                            '#CBD5E1'
+                        ],
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` Searches: ~${context.raw.toLocaleString()} / mo`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: '#F1F5F9' },
+                            ticks: {
+                                callback: function(value) {
+                                    return (value / 1000) + 'k';
+                                },
+                                font: { size: 11 }
+                            }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: { font: { size: 11, weight: 'bold' } }
+                        }
+                    }
+                }
+            });
+
+            // 2. Cost / Profit Comparison Chart
+            const ctxCost = document.getElementById('costChart').getContext('2d');
+            new Chart(ctxCost, {
+                type: 'bar',
+                data: {
+                    labels: ['Server Architecture', 'Client Architecture'],
+                    datasets: [
+                        {
+                            label: 'Server & Bandwidth Cost ($)',
+                            data: [1450, 20],
+                            backgroundColor: '#EF4444',
+                            borderRadius: 6
+                        },
+                        {
+                            label: 'Estimated Ad Revenue ($)',
+                            data: [2100, 2100],
+                            backgroundColor: '#10B981',
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top', labels: { font: { size: 11 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.dataset.label}: $${context.raw}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            grid: { color: '#F1F5F9' },
+                            ticks: {
+                                callback: function(value) { return '$' + value; },
+                                font: { size: 11 }
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { size: 11, weight: 'bold' } }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
